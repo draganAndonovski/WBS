@@ -74,8 +74,10 @@ public class IndexController {
         // create property for population (dbo:populationTotal)
         Property populationProperty = ResourceFactory.createProperty(dboPrefix + "populationTotal");
         Property areaProperty = ResourceFactory.createProperty(dboPrefix + "PopulatedPlace/areaTotal");
+        Property elevationProperty = ResourceFactory.createProperty(dboPrefix + "elevation");
         int cityPopulation = Integer.parseInt(cityResource.getProperty(populationProperty).getString());
         float cityArea = Float.parseFloat(cityResource.getProperty(areaProperty).getString());
+        float cityElevation = Float.parseFloat(cityResource.getProperty(elevationProperty).getString());
 
 //        System.out.println(cityArea);
         //System.out.println(cityPopulation);
@@ -94,20 +96,22 @@ public class IndexController {
             resource = otherCityModel.getResource(resource.toString());
             int otherCityPopulation;
             float otherCityArea;
+            float otherCityElevation;
             try {
                 otherCityPopulation = Integer.parseInt(resource.getProperty(populationProperty).getString());
                 otherCityArea = Float.parseFloat(resource.getProperty(areaProperty).getString());
-                System.out.println(otherCityArea);
+                otherCityElevation = Float.parseFloat(resource.getProperty(elevationProperty).getString());
                 String cityName = resource.getProperty(FOAF.name).getString();
-                String[] cityAttributes = new String[3];
+                String[] cityAttributes = new String[4];
                 cityAttributes[0] = cityName;
                 cityAttributes[1] = Integer.toString(otherCityPopulation);
                 cityAttributes[2] = Float.toString(otherCityArea);
+                cityAttributes[3] = Float.toString(otherCityElevation);
                 citiesPopulations.add(cityAttributes);
             } catch (Exception e) {
                 continue;
             }
-            System.out.println(resource + " has " + otherCityPopulation + " inhabitants and Area: " + otherCityArea);
+            System.out.println(resource + " has " + otherCityPopulation + " inhabitants and Area: " + otherCityArea + " and elevation: " + otherCityElevation);
             ++count;
         }
 
