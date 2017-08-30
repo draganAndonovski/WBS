@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 
 @RequestMapping(value = "/")
 @Controller
@@ -59,9 +61,11 @@ public class IndexController {
 
     @RequestMapping(value = "/city", method = RequestMethod.POST)
     public String getCity(@RequestBody String city) {
-        int count = 0;
-
         //System.out.println(city);
+        if (city != null && city != ""){
+            city = city.substring(0, 1).toUpperCase() + city.substring(1);
+            System.out.println(city);
+        }
 
         // read the model
         city = city.replaceAll(" ", "_");
@@ -102,35 +106,66 @@ public class IndexController {
                 otherCityArea = Float.parseFloat(resource.getProperty(areaProperty).getString());
                 otherCityElevation = Float.parseFloat(resource.getProperty(elevationProperty).getString());
                 String cityName = resource.getProperty(FOAF.name).getString();
-                String[] cityAttributes = new String[4];
+                int score = 0;
+                score += gradeCities(cityPopulation, otherCityPopulation);
+                score += gradeCities(cityArea, otherCityArea);
+                score += gradeCities(cityElevation, otherCityElevation);
+                String[] cityAttributes = new String[5];
                 cityAttributes[0] = cityName;
                 cityAttributes[1] = Integer.toString(otherCityPopulation);
                 cityAttributes[2] = Float.toString(otherCityArea);
                 cityAttributes[3] = Float.toString(otherCityElevation);
+                cityAttributes[4] = Integer.toString(score);
                 citiesPopulations.add(cityAttributes);
+                citiesPopulations.sort(CitySort);
             } catch (Exception e) {
                 continue;
             }
             System.out.println(resource + " has " + otherCityPopulation + " inhabitants and Area: " + otherCityArea + " and elevation: " + otherCityElevation);
-            ++count;
         }
 
-        // filter cities with population and area bigger or smaller by 30% of the chosen city
-        for (String[] cityAttr : citiesPopulations) {
-            int diffPopulation = cityPopulation * 30 / 100;
-            float diffArea = cityArea * 30 / 100;
-            if (Integer.parseInt(cityAttr[1]) + diffPopulation < cityPopulation || Integer.parseInt(cityAttr[1]) - diffPopulation > cityPopulation) {
-                continue;
-            }
-            if (Float.parseFloat(cityAttr[2]) + diffArea < cityArea || Float.parseFloat(cityAttr[2]) - diffArea > cityArea) {
-                continue;
-            }
-            System.out.println(cityAttr[0] + " " + cityAttr[1] + " " + cityAttr[2]);
+        for (String[] cityString : citiesPopulations) {
+            System.out.println(cityString[0] + " " + cityString[4]);
         }
 
-        // print total number of cities processed (167)
-        //System.out.println("VKUPNO " + count);
+        // Most similar city is in position 0
+        String[] firstCity = citiesPopulations.get(0);
+        System.out.println(Arrays.toString(firstCity));
 
         return "index";
+    }
+
+    private Comparator<String[]> CitySort = new Comparator<String[]>() {
+
+        @Override
+        public int compare(String[] o1, String[] o2) {
+            int rollno1 = Integer.parseInt(o1[4]);
+            int rollno2 = Integer.parseInt(o2[4]);
+
+	   /*For ascending order*/
+            return rollno2 - rollno1;
+        }
+    };
+
+    private int gradeCities(float cityArg, float otherCitArg) {
+        if (otherCitArg + cityArg * 20 / 100 > cityArg && otherCitArg < cityArg) {
+            return 5;
+        } else if (otherCitArg - cityArg * 20 / 100 < cityArg && otherCitArg > cityArg) {
+            return 5;
+        } else if (otherCitArg - cityArg * 40 / 100 < cityArg && otherCitArg > cityArg) {
+            return 4;
+        } else if (otherCitArg - cityArg * 40 / 100 < cityArg && otherCitArg > cityArg) {
+            return 4;
+        } else if (otherCitArg - cityArg * 60 / 100 < cityArg && otherCitArg > cityArg) {
+            return 3;
+        } else if (otherCitArg - cityArg * 60 / 100 < cityArg && otherCitArg > cityArg) {
+            return 3;
+        } else if (otherCitArg - cityArg * 80 / 100 < cityArg && otherCitArg > cityArg) {
+            return 2;
+        } else if (otherCitArg - cityArg * 80 / 100 < cityArg && otherCitArg > cityArg) {
+            return 2;
+        } else {
+            return 1;
+        }
     }
 }
