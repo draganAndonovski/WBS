@@ -62,7 +62,7 @@ public class IndexController {
     @RequestMapping(value = "/city", method = RequestMethod.POST)
     public String getCity(@RequestBody String city) {
         //System.out.println(city);
-        if (city != null && city != ""){
+        if (city != null && city != "") {
             city = city.substring(0, 1).toUpperCase() + city.substring(1);
             System.out.println(city);
         }
@@ -76,12 +76,32 @@ public class IndexController {
         // System.out.println(cityResource);
 
         // create property for population (dbo:populationTotal)
+
         Property populationProperty = ResourceFactory.createProperty(dboPrefix + "populationTotal");
         Property areaProperty = ResourceFactory.createProperty(dboPrefix + "PopulatedPlace/areaTotal");
         Property elevationProperty = ResourceFactory.createProperty(dboPrefix + "elevation");
-        int cityPopulation = Integer.parseInt(cityResource.getProperty(populationProperty).getString());
-        float cityArea = Float.parseFloat(cityResource.getProperty(areaProperty).getString());
-        float cityElevation = Float.parseFloat(cityResource.getProperty(elevationProperty).getString());
+        Property precipitationProperty = ResourceFactory.createProperty(dbpPrefix + "aprPrecipitationMm");
+        Property decSunHoursProperty = ResourceFactory.createProperty(dbpPrefix + "decSun");
+        Property yearHighCProperty = ResourceFactory.createProperty(dbpPrefix + "yearRecordHighC");
+        Property yearLowCProperty = ResourceFactory.createProperty(dbpPrefix + "yearRecordLowC");
+
+        int cityPopulation = 0;
+        float cityArea = 0;
+        float cityElevation = 0;
+        float cityPrecipitation = 0;
+        float cityDecSunHours = 0;
+        float cityYearHighC = 0;
+        float cityYearLowC = 0;
+        try {
+            cityPopulation = Integer.parseInt(cityResource.getProperty(populationProperty).getString());
+            cityArea = Float.parseFloat(cityResource.getProperty(areaProperty).getString());
+            cityElevation = Float.parseFloat(cityResource.getProperty(elevationProperty).getString());
+            cityPrecipitation = Float.parseFloat(cityResource.getProperty(precipitationProperty).getString());
+            cityDecSunHours = Float.parseFloat(cityResource.getProperty(decSunHoursProperty).getString());
+            cityYearHighC = Float.parseFloat(cityResource.getProperty(yearHighCProperty).getString());
+            cityYearLowC = Float.parseFloat(cityResource.getProperty(yearLowCProperty).getString());
+        } catch (Exception e) {
+        }
 
 //        System.out.println(cityArea);
         //System.out.println(cityPopulation);
@@ -101,31 +121,63 @@ public class IndexController {
             int otherCityPopulation;
             float otherCityArea;
             float otherCityElevation;
+            float otherCityPrecipitation;
+            float otherCityDecSunHours;
+            float otherCityYearHighC;
+            float otherCityYearLowC;
             try {
                 otherCityPopulation = Integer.parseInt(resource.getProperty(populationProperty).getString());
                 otherCityArea = Float.parseFloat(resource.getProperty(areaProperty).getString());
                 otherCityElevation = Float.parseFloat(resource.getProperty(elevationProperty).getString());
+                otherCityPrecipitation = Float.parseFloat(resource.getProperty(precipitationProperty).getString());
+                otherCityDecSunHours = Float.parseFloat(resource.getProperty(decSunHoursProperty).getString());
+                otherCityYearHighC = Float.parseFloat(resource.getProperty(yearHighCProperty).getString());
+                otherCityYearLowC = Float.parseFloat(resource.getProperty(yearLowCProperty).getString());
                 String cityName = resource.getProperty(FOAF.name).getString();
                 int score = 0;
-                score += gradeCities(cityPopulation, otherCityPopulation);
-                score += gradeCities(cityArea, otherCityArea);
-                score += gradeCities(cityElevation, otherCityElevation);
-                String[] cityAttributes = new String[5];
+                if (cityPopulation != 0) {
+                    score += gradeCities(cityPopulation, otherCityPopulation);
+                }
+                if (cityArea != 0) {
+                    score += gradeCities(cityArea, otherCityArea);
+                }
+                if (cityElevation != 0) {
+                    score += gradeCities(cityElevation, otherCityElevation);
+                }
+                if (cityPrecipitation != 0) {
+                    score += gradeCities(cityPrecipitation, otherCityPrecipitation);
+                }
+                if (cityDecSunHours != 0) {
+                    score += gradeCities(cityDecSunHours, otherCityDecSunHours);
+                }
+                if (cityYearHighC != 0){
+                    score += gradeCities(cityYearHighC, otherCityYearHighC);
+                }
+                if (cityYearLowC != 0){
+                    score += gradeCities(cityYearLowC, otherCityYearLowC);
+                }
+                String[] cityAttributes = new String[9];
                 cityAttributes[0] = cityName;
                 cityAttributes[1] = Integer.toString(otherCityPopulation);
                 cityAttributes[2] = Float.toString(otherCityArea);
                 cityAttributes[3] = Float.toString(otherCityElevation);
-                cityAttributes[4] = Integer.toString(score);
+                cityAttributes[4] = Float.toString(otherCityPrecipitation);
+                cityAttributes[5] = Integer.toString(score);
+                cityAttributes[6] = Float.toString(otherCityDecSunHours);
+                cityAttributes[7] = Float.toString(otherCityYearHighC);
+                cityAttributes[8] = Float.toString(otherCityYearLowC);
                 citiesPopulations.add(cityAttributes);
                 citiesPopulations.sort(CitySort);
             } catch (Exception e) {
                 continue;
             }
-            System.out.println(resource + " has " + otherCityPopulation + " inhabitants and Area: " + otherCityArea + " and elevation: " + otherCityElevation);
+            System.out.println(resource + " has " + otherCityPopulation + " inhabitants and Area: "
+                    + otherCityArea + " and elevation: " + otherCityElevation + ", precipitation: "
+                    + otherCityPrecipitation + ", december sun hours: " + otherCityDecSunHours);
         }
 
         for (String[] cityString : citiesPopulations) {
-            System.out.println(cityString[0] + " " + cityString[4]);
+            System.out.println(cityString[0] + " " + cityString[5]);
         }
 
         // Most similar city is in position 0
@@ -139,8 +191,8 @@ public class IndexController {
 
         @Override
         public int compare(String[] o1, String[] o2) {
-            int rollno1 = Integer.parseInt(o1[4]);
-            int rollno2 = Integer.parseInt(o2[4]);
+            int rollno1 = Integer.parseInt(o1[5]);
+            int rollno2 = Integer.parseInt(o2[5]);
 
 	   /*For ascending order*/
             return rollno2 - rollno1;
