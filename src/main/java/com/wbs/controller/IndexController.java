@@ -1,5 +1,6 @@
 package com.wbs.controller;
 
+import com.wbs.model.City;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.sparql.vocabulary.FOAF;
@@ -60,18 +61,22 @@ public class IndexController {
     }
 
     @RequestMapping(value = "/city", method = RequestMethod.POST)
-    public String getCity(@RequestBody String city) {
+    public String getCity(@RequestBody String city,
+                            org.springframework.ui.Model model) {
         //System.out.println(city);
         if (city != null && city != "") {
             city = city.substring(0, 1).toUpperCase() + city.substring(1);
             System.out.println(city);
         }
 
+        City firstCity = new City(city);
+
         // read the model
         city = city.replaceAll(" ", "_");
         Model cityModel = ModelFactory.createDefaultModel();
         cityModel.read(dataUrl + city, "TURTLE");
         Resource cityResource = cityModel.getResource(resourceUrl + city);
+        model.addAttribute("prv",firstCity);
 
         // System.out.println(cityResource);
 
@@ -100,6 +105,14 @@ public class IndexController {
             cityDecSunHours = Float.parseFloat(cityResource.getProperty(decSunHoursProperty).getString());
             cityYearHighC = Float.parseFloat(cityResource.getProperty(yearHighCProperty).getString());
             cityYearLowC = Float.parseFloat(cityResource.getProperty(yearLowCProperty).getString());
+
+            firstCity.setPopulation(cityPopulation);
+            firstCity.setTotalArea(cityArea);
+            firstCity.setElevation(cityElevation);
+            firstCity.setCityPrecipitation(cityPrecipitation);
+            firstCity.setCityDecSunHours(cityDecSunHours);
+            firstCity.setCityYearHighC(cityYearHighC);
+            firstCity.setCityYearLowC(cityYearLowC);
         } catch (Exception e) {
         }
 
@@ -181,8 +194,17 @@ public class IndexController {
         }
 
         // Most similar city is in position 0
-        String[] firstCity = citiesPopulations.get(0);
-        System.out.println(Arrays.toString(firstCity));
+        String[] firstCityStrings = citiesPopulations.get(0);
+        City otherCity = new City(firstCityStrings[0]);
+        otherCity.setPopulation(Integer.parseInt(firstCityStrings[1]));
+        otherCity.setTotalArea(Float.parseFloat(firstCityStrings[2]));
+        otherCity.setElevation(Float.parseFloat(firstCityStrings[3]));
+        otherCity.setCityPrecipitation(Float.parseFloat(firstCityStrings[4]));
+        otherCity.setCityDecSunHours(Float.parseFloat(firstCityStrings[6]));
+        otherCity.setCityYearHighC(Float.parseFloat(firstCityStrings[7]));
+        otherCity.setCityYearLowC(Float.parseFloat(firstCityStrings[8]));
+        System.out.println(Arrays.toString(firstCityStrings));
+        model.addAttribute("vtor",otherCity);
 
         return "index";
     }
