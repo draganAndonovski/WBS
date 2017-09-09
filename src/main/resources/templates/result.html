@@ -15,7 +15,10 @@
         }
     </style>
     <link rel="stylesheet" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <script th:src="@{/js/src/jquery-3.2.1.min.js}" type="text/javascript">
+    </script>
     <script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!--<script src="/webjars/jquery/3.1.1/jquery.min.js"></script>-->
     <title>Home</title>
 </head>
 <body>
@@ -26,10 +29,10 @@
                 <th>
                     &nbsp;
                 </th>
-                <th th:if="${prv != null}" th:text="${prv.name}">
+                <th th:if="${session.prv != null}" th:text="${session.prv.name}">
                     prvgrad
                 </th>
-                <th th:if="${vtor != null}" th:text="${vtor.name}">
+                <th th:if="${session.vtor != null}" th:text="${session.vtor.name}">
                     vtorgrad
                 </th>
             </thead>
@@ -38,50 +41,50 @@
                 <td>
                     Total population:
                 </td>
-                <td th:text="${prv.population}"></td>
-                <td th:text="${vtor.population}"></td>
+                <td th:text="${session.prv.population}"></td>
+                <td th:text="${session.vtor.population}"></td>
             </tr>
             <tr>
                 <td>
                     Total area:
                 </td>
-                <td th:text="${prv.totalArea}"></td>
-                <td th:text="${vtor.totalArea}"></td>
+                <td th:text="${session.prv.totalArea}"></td>
+                <td th:text="${session.vtor.totalArea}"></td>
             </tr>
             <tr>
                 <td>
                     Elevation:
                 </td>
-                <td th:text="${prv.elevation}"></td>
-                <td th:text="${vtor.elevation}"></td>
+                <td th:text="${session.prv.elevation}"></td>
+                <td th:text="${session.vtor.elevation}"></td>
             </tr>
             <tr>
                 <td>
                     Precipitation:
                 </td>
-                <td th:text="${prv.cityPrecipitation}"></td>
-                <td th:text="${vtor.cityPrecipitation}"></td>
+                <td th:text="${session.prv.cityPrecipitation}"></td>
+                <td th:text="${session.vtor.cityPrecipitation}"></td>
             </tr>
             <tr>
                 <td>
                     Sun hours in December:
                 </td>
-                <td th:text="${prv.cityDecSunHours}"></td>
-                <td th:text="${vtor.cityDecSunHours}"></td>
+                <td th:text="${session.prv.cityDecSunHours}"></td>
+                <td th:text="${session.vtor.cityDecSunHours}"></td>
             </tr>
             <tr>
                 <td>
                     City year high c:
                 </td>
-                <td th:text="${prv.cityYearHighC}"></td>
-                <td th:text="${vtor.cityYearHighC}"></td>
+                <td th:text="${session.prv.cityYearHighC}"></td>
+                <td th:text="${session.vtor.cityYearHighC}"></td>
             </tr>
             <tr>
                 <td>
                     City year low c:
                 </td>
-                <td th:text="${prv.cityYearLowC}"></td>
-                <td th:text="${vtor.cityYearLowC}"></td>
+                <td th:text="${session.prv.cityYearLowC}"></td>
+                <td th:text="${session.vtor.cityYearLowC}"></td>
             </tr>
             </tbody>
         </table>

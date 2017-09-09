@@ -64,18 +64,10 @@ function initMap() {
     });
 
     function sendCity() {
-
-        $.ajax({
-            type: "POST",
-            contentType: "application/json",
-            url: "/city",
-            data: city,
-            success: function (result) {
-                console.log("OK");
-            },
-            error: function (result) {
-                console.log("Not OK");
-            }
+        $.post('/city', {city: city}, function (returnedData) {
+            console.log(returnedData);
+            window.location = "/city";
         });
     }
+
 }

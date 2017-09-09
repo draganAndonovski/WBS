@@ -6,7 +6,10 @@ import org.apache.jena.rdf.model.*;
 import org.apache.jena.sparql.vocabulary.FOAF;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -28,6 +31,11 @@ public class IndexController {
     @RequestMapping(value = "/")
     public String index() {
         return "index";
+    }
+
+    @RequestMapping(value = "/city")
+    public String result() {
+        return "result";
     }
 
     private ResultSet getResults(Query query) {
@@ -205,6 +213,11 @@ public class IndexController {
         otherCity.setCityYearLowC(Float.parseFloat(firstCityStrings[8]));
         System.out.println(Arrays.toString(firstCityStrings));
         model.addAttribute("vtor",otherCity);
+
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpSession session = attr.getRequest().getSession();
+        session.setAttribute("prv", firstCity);
+        session.setAttribute("vtor", otherCity);
 
         return "result";
     }
