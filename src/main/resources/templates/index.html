@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"></meta>
     <meta name="viewport"/>
@@ -43,107 +43,13 @@
     <title>Home</title>
 </head>
 <body>
-<div id="floating-panel">
-    <input id="address" type="textbox" value="Skopje"/>
-    <input id="submit" type="button" value="Geocode"/>
-</div>
-<div id="map_canvas" style="width:100%; height:100%"></div>
-<div class="row">
-    <div class="col-md-6 col-md-offset-2">
-        <table class="table table-bordered table-responsive">
-            <thead>
-                <th>
-                    &nbsp;
-                </th>
-                <th th:if="${prv != null}" th:text="${prv.name}">
-                    prvgrad
-                </th>
-                <th th:if="${vtor != null}" th:text="${vtor.name}">
-                    vtorgrad
-                </th>
-            </thead>
-            <tbody>
-            <tr>
-                <td>
-                    Total population:
-                </td>
-                <td>
-                    &nbsp;
-                </td>
-                <td>
-                    &nbsp;
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Total area:
-                </td>
-                <td>
-                    &nbsp;
-                </td>
-                <td>
-                    &nbsp;
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Elevation:
-                </td>
-                <td>
-                    &nbsp;
-                </td>
-                <td>
-                    &nbsp;
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Precipitation:
-                </td>
-                <td>
-                    &nbsp;
-                </td>
-                <td>
-                    &nbsp;
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Sun hours in December:
-                </td>
-                <td>
-                    &nbsp;
-                </td>
-                <td>
-                    &nbsp;
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    City year high c:
-                </td>
-                <td>
-                    &nbsp;
-                </td>
-                <td>
-                    &nbsp;
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    City year low c:
-                </td>
-                <td>
-                    &nbsp;
-                </td>
-                <td>
-                    &nbsp;
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+
+    <form id="floating-panel" method="post" th:action="@{/city}">
+        <input id="city" name="city" type="textbox" value="Skopje"/>
+        <input id="submit" type="submit" value="Geocode"/>
+    </form>
+    <div id="map_canvas" style="width:100%; height:100%"></div>
+
 </body>
 
 <script async=""

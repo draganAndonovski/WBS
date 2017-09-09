@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"></meta>
+    <meta name="viewport"/>
+    <style type="text/css">
+        html {
+            height: 100%
+        }
+
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0
+        }
+    </style>
+    <link rel="stylesheet" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <title>Home</title>
+</head>
+<body>
+<div class="row">
+    <div class="col-md-6 col-md-offset-2">
+        <table class="table table-bordered table-responsive">
+            <thead>
+                <th>
+                    &nbsp;
+                </th>
+                <th th:if="${prv != null}" th:text="${prv.name}">
+                    prvgrad
+                </th>
+                <th th:if="${vtor != null}" th:text="${vtor.name}">
+                    vtorgrad
+                </th>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    Total population:
+                </td>
+                <td th:text="${prv.population}"></td>
+                <td th:text="${vtor.population}"></td>
+            </tr>
+            <tr>
+                <td>
+                    Total area:
+                </td>
+                <td th:text="${prv.totalArea}"></td>
+                <td th:text="${vtor.totalArea}"></td>
+            </tr>
+            <tr>
+                <td>
+                    Elevation:
+                </td>
+                <td th:text="${prv.elevation}"></td>
+                <td th:text="${vtor.elevation}"></td>
+            </tr>
+            <tr>
+                <td>
+                    Precipitation:
+                </td>
+                <td th:text="${prv.cityPrecipitation}"></td>
+                <td th:text="${vtor.cityPrecipitation}"></td>
+            </tr>
+            <tr>
+                <td>
+                    Sun hours in December:
+                </td>
+                <td th:text="${prv.cityDecSunHours}"></td>
+                <td th:text="${vtor.cityDecSunHours}"></td>
+            </tr>
+            <tr>
+                <td>
+                    City year high c:
+                </td>
+                <td th:text="${prv.cityYearHighC}"></td>
+                <td th:text="${vtor.cityYearHighC}"></td>
+            </tr>
+            <tr>
+                <td>
+                    City year low c:
+                </td>
+                <td th:text="${prv.cityYearLowC}"></td>
+                <td th:text="${vtor.cityYearLowC}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

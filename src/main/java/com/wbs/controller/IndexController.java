@@ -61,7 +61,7 @@ public class IndexController {
     }
 
     @RequestMapping(value = "/city", method = RequestMethod.POST)
-    public String getCity(@RequestBody String city,
+    public String getCity(@RequestParam("city") String city,
                             org.springframework.ui.Model model) {
         //System.out.println(city);
         if (city != null && city != "") {
@@ -206,7 +206,7 @@ public class IndexController {
         System.out.println(Arrays.toString(firstCityStrings));
         model.addAttribute("vtor",otherCity);
 
-        return "index";
+        return "result";
     }
 
     private Comparator<String[]> CitySort = new Comparator<String[]>() {
